@@ -72,7 +72,7 @@ namespace Blooper.Triangles{
             Camera.main.transform.position = (Vector3)GetVisualCenter()+Vector3.back*10;
             SetPuzzleSolution(puzzle);
             //Maybe we should store the vector2int/int version in this class?
-            TriddlePuzzle.GetSolutions(puzzleEdges,puzzle.level);
+            TriddlePuzzle.GetSolutionsForEdge(puzzleEdges.topEdgeTriangles,puzzle.level,MarchDirections.negativeSlope_right);
         }
 
         //Turns the big moma data into a list of positiosn and integers, which is how the data a) gets serialized and b) gets processed.

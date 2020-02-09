@@ -2,6 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 namespace Blooper.Triangles{
+    public enum MarchDirections{
+        horizontal_right,
+        horizontal_left,
+        positiveSlope_right,
+        positiveSlope_left,
+        negativeSlope_right,
+        negativeSlope_left
+    }
+    public enum LevelEdge{
+        top,
+        topRight,
+        topLeft,
+        bottom,
+        bottomRight,
+        bottomLeft
+    }
 [CreateAssetMenu(fileName = "puzzle",menuName = "Triddle/puzzle", order = 120)]
     public class TriddlePuzzle : ScriptableObject
     {
@@ -14,30 +30,30 @@ namespace Blooper.Triangles{
         public int[] bl_solution;
         public int[] br_solution;
 
-        public static int[][] GetSolutions(PuzzleEdges edges, Dictionary<Vector2Int,int>level)
+        public static int[][] GetSolutionsForEdge(List<Triangle> edgeTriangles, Dictionary<Vector2Int,int>level,MarchDirections mdir)
         {
-            // //int 0-5 = t,tr,tl,bl,b,br. (same as the (axb)+(cxd) syntax plus (exf).)
-            int[][] solutions = new int[6][];
-            solutions[0] = new int[edges.topEdgeTriangles.Count];
-            for(int i = 0;i<edges.topEdgeTriangles.Count;i++){
-                Triangle mt = edges.topEdgeTriangles[edges.topEdgeTriangles.Count-1-i];
+            int[][] solutions = new int[edgeTriangles.Count][];//our array of arrays.
+            for(int i = 0;i<edgeTriangles.Count;i++){
+                Triangle mt = edgeTriangles[edgeTriangles.Count-1-i];
                 Vector2Int m = mt.position;
                 List<int> solution = new List<int>();
                 solution.Add(level[m]);
                 bool marching = true;
                 while(marching){
-                    if(level.ContainsKey(Triangle.MarchNegativeSlope(m,1))){
-                        m = Triangle.MarchNegativeSlope(m,1);
+                    Vector2Int key = Triangle.March(m,mdir);
+                    if(level.ContainsKey(key)){
+                        m = key;//key is in while, m is out of this scope.
                         solution.Add(level[m]);
                     }else{
                         marching = false;
                     }
                 }
-                Debug.Log("A column was found! - "+solution.Count);
-                solutions[i] = solution.ToArray();
+            solutions[i] = solution.ToArray();
             }
             //
             return solutions;
         }
+
+        
     }
 }

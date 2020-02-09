@@ -50,6 +50,32 @@ namespace Blooper.Triangles {
         {
             return from.x % 2 == 0;
         }
+        public static Vector2Int March(Vector2Int from, MarchDirections dir)
+        {
+            if(dir == MarchDirections.horizontal_right)
+            {
+                return MarchHorizontal(from,1);
+            }else if(dir == MarchDirections.horizontal_left)
+            {
+                return MarchHorizontal(from,-1);
+            }else if(dir == MarchDirections.positiveSlope_right)
+            {
+                return MarchPositiveSlope(from,1);
+            }else if(dir == MarchDirections.positiveSlope_left)
+            {
+                return MarchPositiveSlope(from,-1);
+            }else if(dir == MarchDirections.negativeSlope_left)
+            {
+                return MarchNegativeSlope(from,-1);
+            }else if(dir == MarchDirections.negativeSlope_right)
+            {
+                return MarchNegativeSlope(from,1);
+            }else{
+                Debug.Log("Nani!?");
+                return Vector2Int.zero;
+            }
+        }
+        
         public static Vector2Int MarchHorizontal(Vector2Int from,int dir = 1)
         {
             if(dir == 1){
