@@ -72,17 +72,24 @@ namespace Blooper.Triangles{
             Camera.main.transform.position = (Vector3)GetVisualCenter()+Vector3.back*10;
             SetPuzzleSolution(puzzle);
             //Maybe we should store the vector2int/int version in this class?
-            TriddlePuzzle.GetSolutionsForEdge(puzzleEdges.topEdgeTriangles,puzzle.level,MarchDirections.negativeSlope_right);
         }
 
-        //Turns the big moma data into a list of positiosn and integers, which is how the data a) gets serialized and b) gets processed.
-        //This is for, like, saving scene data into a puzzle. Usually the data will probably go the other way round.
         public void SetPuzzleSolution(TriddlePuzzle p){
-            p.level = new Dictionary<Vector2Int,int>();
+            Dictionary<Vector2Int, int> level = new Dictionary<Vector2Int,int>();
             foreach(KeyValuePair<Vector2Int,Triangle> vt in trid)
             {  
-                p.level.Add(vt.Key,vt.Value.status);
+                level.Add(vt.Key,vt.Value.status);
             }
+            //
+            p.t_solution = puzzleEdges.GetSolutionsForEdge(LevelEdge.top,level);
+            p.tl_solution = puzzleEdges.GetSolutionsForEdge(LevelEdge.topLeft,level);
+            p.tr_solution = puzzleEdges.GetSolutionsForEdge(LevelEdge.topRight,level);
+            p.b_solution = puzzleEdges.GetSolutionsForEdge(LevelEdge.bottom,level);
+            p.br_solution = puzzleEdges.GetSolutionsForEdge(LevelEdge.bottomRight,level);
+            p.bl_solution = puzzleEdges.GetSolutionsForEdge(LevelEdge.bottomLeft,level);
+            //
+            p.level = level;//not sure about this one.
+            //
         }
         public Vector2 GetVisualCenter()
         {
