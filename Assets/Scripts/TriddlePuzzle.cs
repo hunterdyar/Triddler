@@ -10,13 +10,13 @@ namespace Blooper.Triangles{
         negativeSlope_right,
         negativeSlope_left
     }
-    
-[CreateAssetMenu(fileName = "puzzle",menuName = "Triddle/puzzle", order = 120)]
     public struct HintItem{
         public HintItem(int a,int c){q = a;color = c;}
         public int q;
         public int color;
     }
+[CreateAssetMenu(fileName = "puzzle",menuName = "Triddle/puzzle", order = 120)]
+
     public class TriddlePuzzle : ScriptableObject
     {
         public TridSize tridSize;
