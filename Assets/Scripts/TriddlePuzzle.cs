@@ -8,7 +8,8 @@ namespace Blooper.Triangles{
         positiveSlope_right,
         positiveSlope_left,
         negativeSlope_right,
-        negativeSlope_left
+        negativeSlope_left,
+        none//should never happen, but keeps us from having to deal with nulls on a non-nullable type. 
     }
     public struct HintItem{
         public HintItem(int a,int c){q = a;color = c;}
@@ -53,6 +54,17 @@ namespace Blooper.Triangles{
                 }
             }
             return hint.ToArray();
+        }
+        
+        public static MarchDirections OppositeMarchDirection(MarchDirections indir)
+        {
+                if(indir == MarchDirections.horizontal_left){return MarchDirections.horizontal_right;}
+            else if(indir == MarchDirections.horizontal_right){return MarchDirections.horizontal_left;}
+            else if(indir == MarchDirections.negativeSlope_left){return MarchDirections.negativeSlope_right;}
+            else if(indir == MarchDirections.negativeSlope_right){return MarchDirections.negativeSlope_left;}
+            else if(indir == MarchDirections.positiveSlope_left){return MarchDirections.positiveSlope_right;}
+            else if(indir == MarchDirections.positiveSlope_right){return MarchDirections.positiveSlope_left;}
+            else{return MarchDirections.none;}
         }
     }
 }
