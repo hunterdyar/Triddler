@@ -29,7 +29,7 @@ namespace Blooper.Triangles{
         public int[][] bl_solution;
         public int[][] br_solution;
 
-        public HintItem[][] t_solution_hint;
+        
 
         public HintItem[] GetHintFromSolution(int[] solution){
             //give a solution, return the appropriatley concatenated hint, as a string. So 1,1,0,0,0,3,3,3 becomes 2,2.

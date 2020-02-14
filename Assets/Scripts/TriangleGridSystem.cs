@@ -56,6 +56,7 @@ namespace Blooper.Triangles{
     {
         public GameObject filledMeshMaker;
         public FastLineRenderer lineRenderer;
+        public HintDisplay hintDisplay;
         public TriddlePuzzle puzzle;
         Dictionary<Vector2Int,Triangle> trid;
         Dictionary<Vector2,Triangle> trisByCentroid;
@@ -70,7 +71,11 @@ namespace Blooper.Triangles{
             DrawTriangleGrid();
             //Set the camera to the center.
             Camera.main.transform.position = (Vector3)GetVisualCenter()+Vector3.back*10;
+            //Calculate the required hints from the current puzzle data. (saving a puzzle)
             SetPuzzleSolution(puzzle);
+            
+            // hintDisplay.DrawPuzzleHint(puzzle, puzzleEdges);
+
             //Maybe we should store the vector2int/int version in this class?
         }
 

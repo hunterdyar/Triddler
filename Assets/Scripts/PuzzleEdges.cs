@@ -63,7 +63,7 @@ namespace Blooper.Triangles{
                         marching = false;
                     }
                 }
-            solutions[i] = solution.ToArray();
+                solutions[i] = solution.ToArray();
             }
             //
             return solutions;
