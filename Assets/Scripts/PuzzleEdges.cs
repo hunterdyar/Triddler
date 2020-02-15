@@ -19,8 +19,10 @@ namespace Blooper.Triangles{
         public List<Triangle> bottomEdgeTriangles;
 
         public List<Triangle> bottomRightEdgeTriangles;
-
+        public Dictionary<Triangle,int[]> edgeTriangleToSolutionMap;
         public PuzzleEdges(){
+            //init map
+            edgeTriangleToSolutionMap = new Dictionary<Triangle, int[]>();
             //init lists.
             topEdgeTriangles = new List<Triangle>();
             topRightEdgeTriangles = new List<Triangle>();
@@ -28,6 +30,37 @@ namespace Blooper.Triangles{
             bottomLeftEdgeTriangles = new List<Triangle>();
             bottomEdgeTriangles = new List<Triangle>();
             bottomRightEdgeTriangles = new List<Triangle>();
+        }
+        public LevelEdge EdgeTriangleIsOn(Triangle et)
+        {
+            if(topEdgeTriangles.Contains(et)){return LevelEdge.top;}
+            else if(topRightEdgeTriangles.Contains(et)){return LevelEdge.topRight;}
+            else if(topLeftEdgeTriangles.Contains(et)){return LevelEdge.topLeft;}
+            else if(bottomEdgeTriangles.Contains(et)){return LevelEdge.bottom;}
+            else if(bottomRightEdgeTriangles.Contains(et)){return LevelEdge.bottomRight;}
+            else if(bottomLeftEdgeTriangles.Contains(et)){return LevelEdge.bottomLeft;}
+            else{ 
+                Debug.LogError("triangle doesnt lie on an edge",et.drawingObject);
+                return LevelEdge.top;
+            }
+        }
+        public static MarchDirections EdgeToSolutionDir(LevelEdge edge){
+            //This code is contained in the GetSolutionsForEdge function but i needed it elsewhere too
+            //fuck this is messy.
+            MarchDirections mdir = MarchDirections.positiveSlope_left;
+            if(edge == LevelEdge.top){
+                mdir = MarchDirections.positiveSlope_left;}
+            else if(edge == LevelEdge.topRight){
+                mdir = MarchDirections.positiveSlope_left;}
+            else if(edge == LevelEdge.topLeft){
+                mdir = MarchDirections.horizontal_right;}
+            else if(edge == LevelEdge.bottom){
+                mdir = MarchDirections.negativeSlope_left;}
+            else if(edge == LevelEdge.bottomRight){
+                mdir = MarchDirections.negativeSlope_left;}
+            else if(edge == LevelEdge.bottomLeft){
+                mdir = MarchDirections.horizontal_right;}
+                return mdir;
         }
         public int[][] GetSolutionsForEdge(LevelEdge edge, Dictionary<Vector2Int,int>level)
         {   
@@ -46,6 +79,7 @@ namespace Blooper.Triangles{
                 mdir = MarchDirections.negativeSlope_left;}
             else if(edge == LevelEdge.bottomLeft){edgeTriangles = bottomLeftEdgeTriangles;
                 mdir = MarchDirections.horizontal_right;}
+        
 
             int[][] solutions = new int[edgeTriangles.Count][];//our array of arrays.
             for(int i = 0;i<edgeTriangles.Count;i++){
@@ -64,6 +98,7 @@ namespace Blooper.Triangles{
                     }
                 }
                 solutions[i] = solution.ToArray();
+                edgeTriangleToSolutionMap.Add(mt,solution.ToArray());
             }
             //
             return solutions;

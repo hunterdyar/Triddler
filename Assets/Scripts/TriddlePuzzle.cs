@@ -29,10 +29,10 @@ namespace Blooper.Triangles{
         public int[][] bl_solution;
         public int[][] br_solution;
 
-        
 
-        public HintItem[] GetHintFromSolution(int[] solution){
-            //give a solution, return the appropriatley concatenated hint, as a string. So 1,1,0,0,0,3,3,3 becomes 2,2.
+        
+        public static HintItem[] GetHintFromSolution(int[] solution){
+            //give a solution, return the appropriatley concatenated hint. So 1,1,0,0,0,3,3,3 becomes 2,2.
             //For now, lets consider monochromatic hints. Otherwise some non-int form may be needed, like a bit shift trick or just a fucking string lol.
             int prev = 0;
             List<HintItem> hint = new List<HintItem>();
@@ -42,10 +42,12 @@ namespace Blooper.Triangles{
                 if(j != prev){//
                     hint.Add(new HintItem(1,j));//start with one.
                 }else{
-                    //all this does is increase q(uantity) by one.
-                    hint[hint.Count-1] = new HintItem(hint[hint.Count-1].q+1,hint[hint.Count-1].color);
+                    if(hint.Count>0){
+                        //all this does is increase q(uantity) by one.
+                        hint[hint.Count-1] = new HintItem(hint[hint.Count-1].q+1,hint[hint.Count-1].color);
+                    }
                 }
-                prev = i;
+                prev = j;
             }
             //But get rid of the ones that aren't actually colors. (color, state, same thing basically.)
             for(int i = hint.Count-1;i>0;i--){

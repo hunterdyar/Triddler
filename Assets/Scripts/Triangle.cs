@@ -14,19 +14,24 @@ namespace Blooper.Triangles {
             position = new Vector2Int (x, y);
             edgeLength = _edgeLength;
             drawingObject = null;
-            status = 0;
+            //status = 0;
+            status = Random.Range(0,2);
         }
         public Triangle (Vector2Int _position, float _edgeLength = 1f) {
             position = _position;
             edgeLength = _edgeLength;
             drawingObject = null;
-            status = 0;
+            //status = 0;
+            status = Random.Range(0,2);
+
         }
         public Triangle (Vector2 positionf, float _edgeLength = 1f) {
             position = new Vector2Int ((int) positionf.x, (int) positionf.y);
             edgeLength = _edgeLength;
             drawingObject = null;
-            status = 0;
+            //status = 0;
+            status = Random.Range(0,2);
+
         }
         public Vector2Int position;
         public int status;
@@ -129,6 +134,17 @@ namespace Blooper.Triangles {
             }
         }
         public static MarchDirections OppositeMarchDirection(MarchDirections indir)
+        {
+            if(indir == MarchDirections.horizontal_left){return MarchDirections.horizontal_right;}
+            else if(indir == MarchDirections.horizontal_right){return MarchDirections.horizontal_left;}
+            else if(indir == MarchDirections.negativeSlope_left){return MarchDirections.negativeSlope_right;}
+            else if(indir == MarchDirections.negativeSlope_right){return MarchDirections.negativeSlope_left;}
+            else if(indir == MarchDirections.positiveSlope_left){return MarchDirections.positiveSlope_right;}
+            else if(indir == MarchDirections.positiveSlope_right){return MarchDirections.positiveSlope_left;}
+            else{return MarchDirections.none;}
+        }
+        //this is just a copy of OppositeMarchDir but i think that will have to change?
+        public static MarchDirections GetHintDrawDir(MarchDirections indir)
         {
             if(indir == MarchDirections.horizontal_left){return MarchDirections.horizontal_right;}
             else if(indir == MarchDirections.horizontal_right){return MarchDirections.horizontal_left;}

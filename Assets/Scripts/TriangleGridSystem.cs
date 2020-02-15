@@ -76,7 +76,7 @@ namespace Blooper.Triangles{
             //Calculate the required hints from the current puzzle data. (saving a puzzle)
             SetPuzzleSolution(puzzle);
             
-            // hintDisplay.DrawPuzzleHint(puzzle, puzzleEdges);
+            hintDisplay.DrawPuzzleHint(puzzleEdges);
 
             //Maybe we should store the vector2int/int version in this class?
         }
