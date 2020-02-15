@@ -366,6 +366,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1731862979}
   - component: {fileID: 1731862978}
+  - component: {fileID: 1731862980}
   m_Layer: 0
   m_Name: grid
   m_TagString: Untagged
@@ -388,6 +389,7 @@ MonoBehaviour:
   filledMeshMaker: {fileID: 2574863261618250274, guid: 4329cb60522925149887d750776c72f0,
     type: 3}
   lineRenderer: {fileID: 282423793}
+  hintDisplay: {fileID: 1731862980}
   puzzle: {fileID: 11400000, guid: e8b1dfe6093943f409e116fcd60bc02f, type: 2}
 --- !u!4 &1731862979
 Transform:
@@ -403,3 +405,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1731862980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1731862977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d223d989fff387409a4670b352e11bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hintMeshMaker: {fileID: 2574863261618250274, guid: ab72a7dde5b0d704284bd86d4231f5b4,
+    type: 3}

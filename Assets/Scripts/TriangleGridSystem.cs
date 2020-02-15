@@ -54,9 +54,11 @@ namespace Blooper.Triangles{
     }
     public class TriangleGridSystem: MonoBehaviour
     {
+        [Header("Config")]
         public GameObject filledMeshMaker;
         public FastLineRenderer lineRenderer;
         public HintDisplay hintDisplay;
+        [Header("Settings")]
         public TriddlePuzzle puzzle;
         Dictionary<Vector2Int,Triangle> trid;
         Dictionary<Vector2,Triangle> trisByCentroid;
