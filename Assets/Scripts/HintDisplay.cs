@@ -89,7 +89,6 @@ namespace Blooper.Triangles{
             //already built it. I THINK.
             //
             filledMesh.GetComponent<MeshFilter>().mesh = mesh;
-            filledMesh.GetComponent<PolygonCollider2D>().points = verts2Local;
             
             filledMesh.material.color = c;
             filledMesh.enabled = true;

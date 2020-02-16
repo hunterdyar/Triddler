@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: testPuzzle
   m_EditorClassIdentifier: 
   tridSize:
-    _top: 4
-    _topRight: 4
-    _topLeft: 4
-    _bottomLeft: 4
+    _top: 5
+    _topRight: 5
+    _topLeft: 5
+    _bottomLeft: 5
     colors: 0
