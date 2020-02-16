@@ -42,8 +42,7 @@ namespace Blooper.Triangles{
 
         
         public static HintItem[] GetHintFromSolution(int[] solution){
-            //give a solution, return the appropriatley concatenated hint. So 1,1,0,0,0,3,3,3 becomes 2,2.
-            //For now, lets consider monochromatic hints. Otherwise some non-int form may be needed, like a bit shift trick or just a fucking string lol.
+            //give a solution, return the appropriatley concatenated hint. So 1,1,0,0,0,3,3,3 becomes 2,3.
             int prev = 0;
             List<HintItem> hint = new List<HintItem>();
             //make a list of hintItems with each color and Amount.

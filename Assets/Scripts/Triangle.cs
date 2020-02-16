@@ -16,6 +16,7 @@ namespace Blooper.Triangles {
             drawingObject = null;
             //status = 0;
             status = 0;
+            selectedStatus = 0;
         }
         public Triangle (Vector2Int _position, float _edgeLength = 1f) {
             position = _position;
@@ -23,7 +24,7 @@ namespace Blooper.Triangles {
             drawingObject = null;
             //status = 0;
             status = 0;
-
+            selectedStatus = 0;
         }
         public Triangle (Vector2 positionf, float _edgeLength = 1f) {
             position = new Vector2Int ((int) positionf.x, (int) positionf.y);
@@ -31,10 +32,11 @@ namespace Blooper.Triangles {
             drawingObject = null;
             //status = 0;
             status = 0;
-
+            selectedStatus = 0;
         }
         public Vector2Int position;
         public int status;
+        public int selectedStatus;
         public float edgeLength;
         public GameObject drawingObject;
         //z = -x - y (when y is even).

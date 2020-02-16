@@ -64,25 +64,11 @@ namespace Blooper.Triangles{
         Dictionary<Vector2Int,int> levelData;
         Dictionary<Vector2,Triangle> trisByCentroid;
         PuzzleEdges puzzleEdges;
+        Coroutine validation;
         void Start()
         {
             //Load our levelData from a file into the levelData dictionary.
             LoadLevel();
-
-            // //Create our metadata
-            // SpawnGrid(puzzle.tridSize);
-            // //Create our gameObjects
-            // DrawAllTriangles();
-            // //Create our background of lines.
-            // DrawTriangleGrid();
-            // //Set the camera to the center.
-            // Camera.main.transform.position = (Vector3)GetVisualCenter()+Vector3.back*10;
-            // //Calculate the required hints from the current puzzle data. (saving a puzzle)
-            // SetPuzzleSolution(puzzle);
-            
-            // hintDisplay.DrawPuzzleHint(puzzleEdges);
-
-            //Maybe we should store the vector2int/int version in this class?
         }
         public Dictionary<Vector2Int,int> LevelDataFromCurrentState()
         {
@@ -107,7 +93,13 @@ namespace Blooper.Triangles{
             //Clear current level...
             //destroy children...
             puzzle.SetLevelFromLevelAsText();
-            levelData = puzzle.level;
+            //copy puzzle data to here
+            levelData = new Dictionary<Vector2Int, int>(puzzle.level);
+            //wait we want to start with a blank slate.
+            foreach(Vector2Int key in puzzle.level.Keys){
+                levelData[key] = 0;
+            }
+            //
             ClearData();
             SpawnGrid(puzzle.tridSize);
             DrawAllTriangles();
@@ -147,6 +139,7 @@ namespace Blooper.Triangles{
         }
         void ClearData()
         {
+            lineRenderer.Reset();
             if(trid !=null)
             {
                 //destroy all triangle objects
@@ -164,14 +157,43 @@ namespace Blooper.Triangles{
             //
             //garbage collection should do the rest.
         }
+        public void TriangleUpdated(Triangle t)
+        {
+            //Update our storage.
+            levelData[t.position] = t.selectedStatus;
+            StopCoroutine(ValidatePuzzle());
+            validation = StartCoroutine(ValidatePuzzle());
+        }
+        [ContextMenu("Validate")]
+        public IEnumerator ValidatePuzzle()
+        {
+            //update levelData
+            bool won = true;
+            //compare puzzle.level to levelData
+            foreach(Vector2Int key in puzzle.level.Keys)
+            {
+                if(!levelData.ContainsKey(key)){won = false;break;}
+                if(levelData[key] != puzzle.level[key]){won = false; break;}
+                yield return null;
+            }
+            if(won){
+                YouWon();
+            }
+        }
+        void YouWon()
+        {
+            Debug.Log("o.K.");
+            hintDisplay.Reset();
+            GameObject.FindObjectOfType<Selector>().enabled = false;
+        }
         bool AddTriangle(Triangle o)
         {
             if(!trid.ContainsKey(o.position))
             {
                 //set value from level data.
-                if(levelData.ContainsKey(o.position))
+                if(puzzle.level.ContainsKey(o.position))
                 {
-                    o.status = levelData[o.position];
+                    o.status = puzzle.level[o.position];
                 }else{
                     o.status = 0;
                 }
@@ -440,16 +462,8 @@ namespace Blooper.Triangles{
             //
             filledMesh.GetComponent<MeshFilter>().mesh = mesh;
             filledMesh.GetComponent<PolygonCollider2D>().points = verts2Local;
-            if(t.status != 0){
-                filledMesh.material.color = puzzle.palette[t.status-1];
-            }else{
-                filledMesh.material.color = Color.white;
-            }
-            if(t.status == 0){
-                filledMesh.enabled = false;
-            }else{
-                filledMesh.enabled = true;
-            }
+            filledMesh.material.color = Color.white;
+            filledMesh.enabled = true;
             filledMesh.GetComponent<TriangleInteractor>().triangle = t;
         }
     }

@@ -23,6 +23,17 @@ namespace Blooper.Triangles{
         }
         
         public void Draw(HintItem[] hint, MarchDirections dir, Triangle initialEdge){
+            if(dir == MarchDirections.positiveSlope_left || dir == MarchDirections.negativeSlope_left)
+            {
+                //duplicate hint array for duplication
+                HintItem[] hintForward = new HintItem[hint.Length];
+                hint.CopyTo(hintForward,0);
+                //reverse hint array.
+                for(int i = 0;i<hint.Length;i++)
+                {
+                    hint[i] = hintForward[hint.Length-1-i];
+                }
+            }
             for(int i = 1;i<=hint.Length;i++){
                 //color from int to color? 
                 //Where do we store the palette?
