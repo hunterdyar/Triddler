@@ -61,26 +61,61 @@ namespace Blooper.Triangles{
         [Header("Settings")]
         public TriddlePuzzle puzzle;
         Dictionary<Vector2Int,Triangle> trid;
+        Dictionary<Vector2Int,int> levelData;
         Dictionary<Vector2,Triangle> trisByCentroid;
         PuzzleEdges puzzleEdges;
         void Start()
         {
-            //Create our metadata
-            SpawnGrid(puzzle.tridSize);
-            //Create our gameObjects
-            DrawAllTriangles();
-            //Create our background of lines.
-            DrawTriangleGrid();
-            //Set the camera to the center.
-            Camera.main.transform.position = (Vector3)GetVisualCenter()+Vector3.back*10;
-            //Calculate the required hints from the current puzzle data. (saving a puzzle)
-            SetPuzzleSolution(puzzle);
+            //Load our levelData from a file into the levelData dictionary.
+            LoadLevel();
+
+            // //Create our metadata
+            // SpawnGrid(puzzle.tridSize);
+            // //Create our gameObjects
+            // DrawAllTriangles();
+            // //Create our background of lines.
+            // DrawTriangleGrid();
+            // //Set the camera to the center.
+            // Camera.main.transform.position = (Vector3)GetVisualCenter()+Vector3.back*10;
+            // //Calculate the required hints from the current puzzle data. (saving a puzzle)
+            // SetPuzzleSolution(puzzle);
             
-            hintDisplay.DrawPuzzleHint(puzzleEdges);
+            // hintDisplay.DrawPuzzleHint(puzzleEdges);
 
             //Maybe we should store the vector2int/int version in this class?
         }
-
+        public Dictionary<Vector2Int,int> LevelDataFromCurrentState()
+        {
+            Dictionary<Vector2Int,int> data = new Dictionary<Vector2Int, int>();
+            foreach(Triangle t in trid.Values)
+            {
+                Vector2Int key = t.position;
+                int value = t.status;
+                data.Add(key,value);
+            }
+            return data;
+        }
+        [ContextMenu("Save level to Text")]
+        void SetPuzzleTextFromData()
+        {
+            puzzle.level = LevelDataFromCurrentState();
+            puzzle.SetLevelAsTextFromLevel();
+        }
+        [ContextMenu("Load Level")]
+        void LoadLevel()
+        {
+            //Clear current level...
+            //destroy children...
+            puzzle.SetLevelFromLevelAsText();
+            levelData = puzzle.level;
+            ClearData();
+            SpawnGrid(puzzle.tridSize);
+            DrawAllTriangles();
+            DrawTriangleGrid();
+            Camera.main.transform.position = (Vector3)GetVisualCenter()+Vector3.back*10;
+            SetPuzzleSolution(puzzle);
+            hintDisplay.DrawPuzzleHint(puzzleEdges);
+        }
         public void SetPuzzleSolution(TriddlePuzzle p){
             Dictionary<Vector2Int, int> level = new Dictionary<Vector2Int,int>();
             foreach(KeyValuePair<Vector2Int,Triangle> vt in trid)
@@ -112,14 +147,36 @@ namespace Blooper.Triangles{
         }
         void ClearData()
         {
+            if(trid !=null)
+            {
+                //destroy all triangle objects
+                foreach(Triangle t in trid.Values)
+                {
+                    Destroy(t.drawingObject);
+                }
+            }
+            //destroy all hint drawing objects
+            hintDisplay.Reset();
+            //reset our data
             puzzleEdges = new PuzzleEdges();
             trid = new Dictionary<Vector2Int, Triangle>();
             trisByCentroid = new Dictionary<Vector2, Triangle>();
+            //
+            //garbage collection should do the rest.
         }
         bool AddTriangle(Triangle o)
         {
             if(!trid.ContainsKey(o.position))
             {
+                //set value from level data.
+                if(levelData.ContainsKey(o.position))
+                {
+                    o.status = levelData[o.position];
+                }else{
+                    o.status = 0;
+                }
+
+
                 trid.Add(o.position,o);
                 trisByCentroid.Add(o.GetCentroidInWorldSpace(),o);
                 return true;
@@ -350,9 +407,12 @@ namespace Blooper.Triangles{
             //
             filledMesh.GetComponent<MeshFilter>().mesh = mesh;
             filledMesh.GetComponent<PolygonCollider2D>().points = verts2Local;
-            
             filledMesh.material.color = Color.black;
-            filledMesh.enabled = false;
+            if(t.status == 0){
+                filledMesh.enabled = false;
+            }else{
+                filledMesh.enabled = true;
+            }
             filledMesh.GetComponent<TriangleInteractor>().triangle = t;
         }
     }

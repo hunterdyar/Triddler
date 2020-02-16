@@ -22,6 +22,9 @@ namespace Blooper.Triangles{
     {
         public TridSize tridSize;
         public Dictionary<Vector2Int,int> level;
+
+        [Multiline]
+        public string levelAsTextData; 
         public int[][] t_solution;
         public int[][] tl_solution;
         public int[][] tr_solution;
@@ -56,6 +59,35 @@ namespace Blooper.Triangles{
                 }
             }
             return hint.ToArray();
-        }       
+        }
+        public void SetLevelAsTextFromLevel()
+        {
+            levelAsTextData = "";
+            levelAsTextData = levelAsTextData+tridSize._top.ToString()+",";
+            levelAsTextData = levelAsTextData+tridSize._topRight.ToString()+",";
+            levelAsTextData = levelAsTextData+tridSize._topLeft.ToString()+",";
+            levelAsTextData = levelAsTextData+tridSize._bottomLeft.ToString()+",";
+            levelAsTextData = levelAsTextData+tridSize.colors.ToString()+",";
+            //0-4
+            //5+
+            foreach(KeyValuePair<Vector2Int,int> kvp in level)
+            {
+                levelAsTextData = levelAsTextData+kvp.Key.x.ToString()+","+kvp.Key.y.ToString()+","+kvp.Value.ToString()+",";
+            }
+        }
+        public void SetLevelFromLevelAsText()
+        {
+            level = new Dictionary<Vector2Int, int>();
+            string[] lar= levelAsTextData.Split(',');
+            tridSize = new TridSize(int.Parse(lar[0]),int.Parse(lar[1]),int.Parse(lar[2]),int.Parse(lar[3]),int.Parse(lar[4]));
+            for(int i = 5;i<lar.Length;i = i+3)
+            {
+                if(lar[i] != "" && lar[i+1] != "" && lar[i+2] != ""){
+                    Vector2Int p = new Vector2Int(int.Parse(lar[i]),int.Parse(lar[i+1]));
+                    level[p] = int.Parse(lar[i+2]);
+                }
+            }
+        }
     }
+
 }

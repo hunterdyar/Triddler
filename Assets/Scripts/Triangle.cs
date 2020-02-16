@@ -15,14 +15,14 @@ namespace Blooper.Triangles {
             edgeLength = _edgeLength;
             drawingObject = null;
             //status = 0;
-            status = Random.Range(0,2);
+            status = 0;
         }
         public Triangle (Vector2Int _position, float _edgeLength = 1f) {
             position = _position;
             edgeLength = _edgeLength;
             drawingObject = null;
             //status = 0;
-            status = Random.Range(0,2);
+            status = 0;
 
         }
         public Triangle (Vector2 positionf, float _edgeLength = 1f) {
@@ -30,7 +30,7 @@ namespace Blooper.Triangles {
             edgeLength = _edgeLength;
             drawingObject = null;
             //status = 0;
-            status = Random.Range(0,2);
+            status = 0;
 
         }
         public Vector2Int position;
