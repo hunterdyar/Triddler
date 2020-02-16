@@ -82,8 +82,9 @@ namespace Blooper.Triangles{
         
 
             int[][] solutions = new int[edgeTriangles.Count][];//our array of arrays.
-            for(int i = 0;i<edgeTriangles.Count;i++){
-                Triangle mt = edgeTriangles[edgeTriangles.Count-1-i];
+            // for(int i = edgeTriangles.Count-1;i>0;i--){
+            foreach(Triangle mt in edgeTriangles){
+                // Triangle mt = edgeTriangles[i];//-1-i
                 Vector2Int m = mt.position;
                 List<int> solution = new List<int>();
                 solution.Add(level[m]);
@@ -97,7 +98,7 @@ namespace Blooper.Triangles{
                         marching = false;
                     }
                 }
-                solutions[i] = solution.ToArray();
+                // solutions[i] = solution.ToArray();
                 edgeTriangleToSolutionMap.Add(mt,solution.ToArray());
             }
             //

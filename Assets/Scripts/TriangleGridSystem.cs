@@ -205,78 +205,111 @@ namespace Blooper.Triangles{
             Triangle t = o;//stamping triangle to march.
             //lets make the bottom row.
             //triangles on a side with n triangle faces at the side = 2n-2
-            int w = 0;//eh
-            for(int i = 0;i<gs.bottomTris-w;i++)
+            for(int i = 0;i<gs.bottomTris;i++)
             {
                 t = new Triangle(Triangle.MarchHorizontal(t.position,1));
                 if(AddTriangle(t)){
                     lastValid = t.position;
-                    if(t.pointsUp){
-                        puzzleEdges.bottomEdgeTriangles.Add(t);
-                    }
+           
                 };
             }
             //bottom right edge
-            for(int i = 0;i<gs.bottomRightTris-w;i++)
+            for(int i = 0;i<gs.bottomRightTris;i++)
             {
                 t = new Triangle(Triangle.MarchPositiveSlope(t.position,1));
                 if(AddTriangle(t)){
                     lastValid = t.position;
-                    if(!t.pointsUp){
-                        puzzleEdges.bottomRightEdgeTriangles.Add(t);
-                    }    
+              
                 };
 
             }
             //topRight edge
-            for(int i = 0;i<(gs.topRightTris-w);i++)
+            for(int i = 0;i<gs.topRightTris;i++)
             {
                 t = new Triangle(Triangle.MarchNegativeSlope(t.position,-1));
                 if(AddTriangle(t)){
                     lastValid = t.position;
-                    if(t.pointsUp){
-                        puzzleEdges.topRightEdgeTriangles.Add(t);
-                    }    
-                };
+ 
+                }
 
             }
             //top edge
-            for(int i = 0;i<gs.topTris-w;i++)
+            for(int i = 0;i<gs.topTris;i++)
             {
                 t = new Triangle(Triangle.MarchHorizontal(t.position,-1));
                 if(AddTriangle(t)){
                     lastValid = t.position;
                     //
-                    if(!t.pointsUp){
-                        puzzleEdges.topEdgeTriangles.Add(t);
-                    }
+
                 };
             }
             //top left edge
-            for(int i = 0;i<gs.topLeftTris-w;i++)
+            for(int i = 0;i<gs.topLeftTris;i++)
             {
                 t = new Triangle(Triangle.MarchPositiveSlope(t.position,-1));
                 if(AddTriangle(t)){
                     lastValid = t.position;
-                    if(t.pointsUp){
-                        puzzleEdges.topLeftEdgeTriangles.Add(t);
-                    }
+
                 };
             }
             //bottlmLeft edge
-            for(int i = 0;i<gs.bottomLeftTris-w;i++)
+            for(int i = 0;i<gs.bottomLeftTris;i++)
             {
                 t = new Triangle(Triangle.MarchNegativeSlope(t.position,1));
                 if(AddTriangle(t)){
                     lastValid = t.position;
-                    if(!t.pointsUp){
-                        puzzleEdges.bottomLeftEdgeTriangles.Add(t);
-                    }    
+        
                 };
             }
+         
+
             //Alright so we have the outline.
             SpawnFill();
+
+            IdentifyPuzzleEdges();
         }
+
+        void IdentifyPuzzleEdges(){
+            foreach(Triangle t in trid.Values)
+            {
+                Vector2Int pos = t.position;
+                Vector2Int right = Triangle.MarchHorizontal(pos,1);
+                Vector2Int left = Triangle.MarchHorizontal(pos,-1);
+                Vector2Int posRight = Triangle.MarchPositiveSlope(pos,1);
+                Vector2Int posLeft = Triangle.MarchPositiveSlope(pos,-1);
+                Vector2Int negRight = Triangle.MarchNegativeSlope(pos,1);
+                Vector2Int negLeft = Triangle.MarchNegativeSlope(pos,-1);
+
+                if(!t.pointsUp){//top, bottom left, bottom right
+                    //top
+                    if(!trid.ContainsKey(posRight) && !trid.ContainsKey(negLeft)){
+                        puzzleEdges.topEdgeTriangles.Add(t);
+                    }else if(trid.ContainsKey(right) && !trid.ContainsKey(left)){
+                        if(!puzzleEdges.bottomLeftEdgeTriangles.Contains(t)){
+                            puzzleEdges.bottomLeftEdgeTriangles.Add(t);
+                        }
+                    }else if(!trid.ContainsKey(right) && trid.ContainsKey(left)){
+                        if(!puzzleEdges.bottomRightEdgeTriangles.Contains(t)){
+                            puzzleEdges.bottomRightEdgeTriangles.Add(t);
+                        }
+                    }
+
+                }else{//bottom, top right, top left
+                    if(!trid.ContainsKey(negRight) && !trid.ContainsKey(posLeft)){
+                        puzzleEdges.bottomEdgeTriangles.Add(t);
+                    }else if(trid.ContainsKey(right) && !trid.ContainsKey(left)){
+                        if(!puzzleEdges.topLeftEdgeTriangles.Contains(t)){
+                            puzzleEdges.topLeftEdgeTriangles.Add(t);
+                        }
+                    }else if(!trid.ContainsKey(right) && trid.ContainsKey(left)){
+                        if(!puzzleEdges.topRightEdgeTriangles.Contains(t)){
+                            puzzleEdges.topRightEdgeTriangles.Add(t);
+                        }
+                    }
+                }
+            }
+        }
+
         //Goes bottom to top, left to right, and fills in each row with triangles.
         void SpawnFill(){
             int min = int.MaxValue;
@@ -407,7 +440,11 @@ namespace Blooper.Triangles{
             //
             filledMesh.GetComponent<MeshFilter>().mesh = mesh;
             filledMesh.GetComponent<PolygonCollider2D>().points = verts2Local;
-            filledMesh.material.color = Color.black;
+            if(t.status != 0){
+                filledMesh.material.color = puzzle.palette[t.status-1];
+            }else{
+                filledMesh.material.color = Color.white;
+            }
             if(t.status == 0){
                 filledMesh.enabled = false;
             }else{

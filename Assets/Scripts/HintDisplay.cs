@@ -27,7 +27,7 @@ namespace Blooper.Triangles{
                 //color from int to color? 
                 //Where do we store the palette?
                 //Debug.Log("Drawing a single hint set");
-                DrawOneHint(i,hint[i-1].q,Color.magenta,Triangle.GetHintDrawDir(dir),initialEdge);
+                DrawOneHint(i,hint[i-1].q,hint[i-1].color,Triangle.GetHintDrawDir(dir),initialEdge);
             }
 
         }

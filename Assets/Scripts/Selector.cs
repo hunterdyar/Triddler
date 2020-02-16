@@ -4,7 +4,7 @@ using UnityEngine;
 using Blooper.Triangles;
 public class Selector : MonoBehaviour
 {
-    
+    public TriddlePuzzle puzzle;//for palette.
     void Update()
     {
         if(Input.GetMouseButtonDown(0))
@@ -22,10 +22,17 @@ public class Selector : MonoBehaviour
 
             Collider2D c = Physics2D.OverlapPoint((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition));
             if(c != null){
-
-                c.GetComponent<MeshRenderer>().material.color = Color.green;
-                c.GetComponent<MeshRenderer>().enabled = true;
-                c.GetComponent<TriangleInteractor>().triangle.status = 1;
+                Triangle t = c.GetComponent<TriangleInteractor>().triangle;
+                if(t.status < puzzle.tridSize.colors)
+                {
+                    t.status++;
+                    c.GetComponent<MeshRenderer>().material.color = puzzle.palette[t.status-1];
+                    c.GetComponent<MeshRenderer>().enabled = true;
+                }else{
+                    c.GetComponent<MeshRenderer>().material.color = Color.white;
+                    c.GetComponent<MeshRenderer>().enabled = false;
+                    t.status = 0;
+                }
             }
         }
     }

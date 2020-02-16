@@ -12,9 +12,14 @@ namespace Blooper.Triangles{
         none//should never happen, but keeps us from having to deal with nulls on a non-nullable type. 
     }
     public struct HintItem{
-        public HintItem(int a,int c){q = a;color = c;}
+        public HintItem(int a,int c){
+            q = a;
+            status = c;
+        }
         public int q;
-        public int color;
+        public int status;
+        public static Color[] palette;
+        public Color color{get{if(status>0){return palette[status-1];}else{return Color.white;}}}
     }
 [CreateAssetMenu(fileName = "puzzle",menuName = "Triddle/puzzle", order = 120)]
 
@@ -22,6 +27,8 @@ namespace Blooper.Triangles{
     {
         public TridSize tridSize;
         public Dictionary<Vector2Int,int> level;
+
+        public Color[] palette;
 
         [Multiline]
         public string levelAsTextData; 
@@ -47,14 +54,14 @@ namespace Blooper.Triangles{
                 }else{
                     if(hint.Count>0){
                         //all this does is increase q(uantity) by one.
-                        hint[hint.Count-1] = new HintItem(hint[hint.Count-1].q+1,hint[hint.Count-1].color);
+                        hint[hint.Count-1] = new HintItem(hint[hint.Count-1].q+1,hint[hint.Count-1].status);
                     }
                 }
                 prev = j;
             }
             //But get rid of the ones that aren't actually colors. (color, state, same thing basically.)
             for(int i = hint.Count-1;i>0;i--){
-                if(hint[i].color == 0){
+                if(hint[i].status == 0){
                     hint.RemoveAt(i);
                 }
             }
@@ -68,6 +75,10 @@ namespace Blooper.Triangles{
             levelAsTextData = levelAsTextData+tridSize._topLeft.ToString()+",";
             levelAsTextData = levelAsTextData+tridSize._bottomLeft.ToString()+",";
             levelAsTextData = levelAsTextData+tridSize.colors.ToString()+",";
+
+            foreach(Color c in palette){
+                levelAsTextData = levelAsTextData+"#"+ColorUtility.ToHtmlStringRGB(c)+",";
+            }
             //0-4
             //5+
             foreach(KeyValuePair<Vector2Int,int> kvp in level)
@@ -80,7 +91,19 @@ namespace Blooper.Triangles{
             level = new Dictionary<Vector2Int, int>();
             string[] lar= levelAsTextData.Split(',');
             tridSize = new TridSize(int.Parse(lar[0]),int.Parse(lar[1]),int.Parse(lar[2]),int.Parse(lar[3]),int.Parse(lar[4]));
-            for(int i = 5;i<lar.Length;i = i+3)
+            int index = 5;//starting index where our level data begins.
+            palette = new Color[tridSize.colors];
+            for(int i = 0;i<tridSize.colors;i++)
+            {
+                Color c = Color.black;
+                ColorUtility.TryParseHtmlString(lar[5+i],out c);
+                palette[i] = c;
+                index++;    
+            }
+            //
+            HintItem.palette = palette;
+            //
+            for(int i = index;i<lar.Length;i = i+3)
             {
                 if(lar[i] != "" && lar[i+1] != "" && lar[i+2] != ""){
                     Vector2Int p = new Vector2Int(int.Parse(lar[i]),int.Parse(lar[i+1]));
