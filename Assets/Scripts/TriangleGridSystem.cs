@@ -102,7 +102,7 @@ namespace Blooper.Triangles{
             puzzle.SetLevelAsTextFromLevel();
         }
         [ContextMenu("Load Level")]
-        void LoadLevel()
+        public void LoadLevel()
         {
             //Clear current level...
             //destroy children...

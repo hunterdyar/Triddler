@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: testPuzzle
   m_EditorClassIdentifier: 
   tridSize:
-    _top: 5
-    _topRight: 5
-    _topLeft: 5
-    _bottomLeft: 5
-    colors: 0
+    _top: 1
+    _topRight: 2
+    _topLeft: 2
+    _bottomLeft: 2
+    colors: 2
+  levelAsTextData: 1,2,2,2,2
