@@ -89,6 +89,9 @@ namespace Blooper.Triangles{
         public void SetLevelFromLevelAsText()
         {
             level = new Dictionary<Vector2Int, int>();
+            
+            if(levelAsTextData == ""){ return;}
+
             string[] lar= levelAsTextData.Split(',');
             tridSize = new TridSize(int.Parse(lar[0]),int.Parse(lar[1]),int.Parse(lar[2]),int.Parse(lar[3]),int.Parse(lar[4]));
             int index = 5;//starting index where our level data begins.

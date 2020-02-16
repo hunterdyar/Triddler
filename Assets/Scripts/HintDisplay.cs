@@ -102,7 +102,7 @@ namespace Blooper.Triangles{
         public void Reset(){
             foreach(Transform child in transform)
             {
-                Destroy(child);
+                Destroy(child.gameObject);
             }
         }
 
