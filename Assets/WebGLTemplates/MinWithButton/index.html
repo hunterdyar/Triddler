@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>%UNITY_WEB_NAME%</title>
+    <script src="%UNITY_WEBGL_LOADER_URL%"></script>
+    <script>
+      var gameInstance = UnityLoader.instantiate("gameContainer", "%UNITY_WEBGL_BUILD_URL%");
+    </script>
+  </head>
+  <body>
+    <div id="gameContainer" style="width: %UNITY_WIDTH%px; height: %UNITY_HEIGHT%px; margin: auto"></div>
+    <input type="text" id="levelURLInput" />
+    <button type="button" id="levelURLButton">Load level URL</button> or upload level txt: 
+    <input id="levelFilePicker" type="file"/> 
+  <script>
+      var fileInput = document.getElementById('levelFilePicker');
+      var levelURLInput = document.getElementById('levelURLInput');
+      var levelURLButton = document.getElementById('levelURLButton');
+      levelURLButton.onclick = function(event){
+        gameInstance.SendMessage('grid','FileSelected', levelURLInput.value);
+      };
+      fileInput.onclick = function (event) {
+          this.value = null;
+      };
+      fileInput.onchange = function (event) {
+        gameInstance.SendMessage('grid', 'FileSelected', URL.createObjectURL(event.target.files[0]));
+      };
+  </script>
+  </body>
+</html>
