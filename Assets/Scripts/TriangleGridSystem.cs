@@ -100,13 +100,16 @@ namespace Blooper.Triangles{
                 levelData[key] = 0;
             }
             //
+            GameObject.FindObjectOfType<Selector>().enabled = true;
             ClearData();
             SpawnGrid(puzzle.tridSize);
             DrawAllTriangles();
             DrawTriangleGrid();
-            Camera.main.transform.position = (Vector3)GetVisualCenter()+Vector3.back*10;
             SetPuzzleSolution(puzzle);
             hintDisplay.DrawPuzzleHint(puzzleEdges);
+            Camera.main.transform.position = (Vector3)GetVisualCenter()+Vector3.back*10;
+            Camera.main.GetComponent<CameraController>().centeredPos = Camera.main.transform.position;
+            Camera.main.GetComponent<CameraController>().ResetToCenter(true);
         }
         public void SetPuzzleSolution(TriddlePuzzle p){
             Dictionary<Vector2Int, int> level = new Dictionary<Vector2Int,int>();
@@ -184,6 +187,7 @@ namespace Blooper.Triangles{
         {
             Debug.Log("o.K.");
             hintDisplay.Reset();
+            Camera.main.GetComponent<CameraController>().ResetToCenter(true);
             GameObject.FindObjectOfType<Selector>().enabled = false;
         }
         bool AddTriangle(Triangle o)
@@ -463,7 +467,7 @@ namespace Blooper.Triangles{
             filledMesh.GetComponent<MeshFilter>().mesh = mesh;
             filledMesh.GetComponent<PolygonCollider2D>().points = verts2Local;
             filledMesh.material.color = Color.white;
-            filledMesh.enabled = true;
+            filledMesh.enabled = false;
             filledMesh.GetComponent<TriangleInteractor>().triangle = t;
         }
     }
