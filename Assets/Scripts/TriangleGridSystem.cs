@@ -140,6 +140,17 @@ namespace Blooper.Triangles{
             }
             return new Vector2(xt/length,yt/length);
         }
+        public int[] GetCurrentValuesFromList(Vector2Int[] row)
+        {
+            List<int> vs = new List<int>();
+            foreach(Vector2Int pos in row)
+            {
+                if(trid.ContainsKey(pos)){
+                    vs.Add(trid[pos].selectedStatus);
+                }
+            }
+            return vs.ToArray();
+        }
         void ClearData()
         {
             lineRenderer.Reset();
@@ -166,6 +177,9 @@ namespace Blooper.Triangles{
             levelData[t.position] = t.selectedStatus;
             StopCoroutine(ValidatePuzzle());
             validation = StartCoroutine(ValidatePuzzle());
+
+            //
+            hintDisplay.ComparePuzzleHint(puzzleEdges,t.position);
         }
         [ContextMenu("Validate")]
         public IEnumerator ValidatePuzzle()
@@ -185,7 +199,7 @@ namespace Blooper.Triangles{
         }
         void YouWon()
         {
-            Debug.Log("o.K.");
+            Debug.Log("O.K.");
             hintDisplay.Reset();
             Camera.main.GetComponent<CameraController>().ResetToCenter(true,true);
             GameObject.FindObjectOfType<Selector>().enabled = false;
@@ -202,7 +216,6 @@ namespace Blooper.Triangles{
                 }else{
                     o.status = 0;
                 }
-
 
                 trid.Add(o.position,o);
                 trisByCentroid.Add(o.GetCentroidInWorldSpace(),o);
@@ -311,26 +324,32 @@ namespace Blooper.Triangles{
                     //top
                     if(!trid.ContainsKey(posRight) && !trid.ContainsKey(negLeft)){
                         puzzleEdges.topEdgeTriangles.Add(t);
+                        puzzleEdges.allEdgeTriangles.Add(t);
                     }else if(trid.ContainsKey(right) && !trid.ContainsKey(left)){
                         if(!puzzleEdges.bottomLeftEdgeTriangles.Contains(t)){
                             puzzleEdges.bottomLeftEdgeTriangles.Add(t);
+                            puzzleEdges.allEdgeTriangles.Add(t);
                         }
                     }else if(!trid.ContainsKey(right) && trid.ContainsKey(left)){
                         if(!puzzleEdges.bottomRightEdgeTriangles.Contains(t)){
                             puzzleEdges.bottomRightEdgeTriangles.Add(t);
+                            puzzleEdges.allEdgeTriangles.Add(t);
                         }
                     }
 
                 }else{//bottom, top right, top left
                     if(!trid.ContainsKey(negRight) && !trid.ContainsKey(posLeft)){
                         puzzleEdges.bottomEdgeTriangles.Add(t);
+                        puzzleEdges.allEdgeTriangles.Add(t);
                     }else if(trid.ContainsKey(right) && !trid.ContainsKey(left)){
                         if(!puzzleEdges.topLeftEdgeTriangles.Contains(t)){
                             puzzleEdges.topLeftEdgeTriangles.Add(t);
+                            puzzleEdges.allEdgeTriangles.Add(t);
                         }
                     }else if(!trid.ContainsKey(right) && trid.ContainsKey(left)){
                         if(!puzzleEdges.topRightEdgeTriangles.Contains(t)){
                             puzzleEdges.topRightEdgeTriangles.Add(t);
+                            puzzleEdges.allEdgeTriangles.Add(t);
                         }
                     }
                 }

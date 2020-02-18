@@ -96,7 +96,6 @@ public class CameraController : MonoBehaviour
             }
          }
          //
-         Debug.Log("Found box"+ minX+" - "+minY+" - "+maxX+" - "+maxY);
  
          return Rect.MinMaxRect(minX - boundingBoxPadding, maxY + boundingBoxPadding, maxX + boundingBoxPadding, minY - boundingBoxPadding);
      }

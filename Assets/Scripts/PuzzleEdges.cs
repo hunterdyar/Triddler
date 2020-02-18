@@ -19,10 +19,13 @@ namespace Blooper.Triangles{
         public List<Triangle> bottomEdgeTriangles;
 
         public List<Triangle> bottomRightEdgeTriangles;
+        public List<Triangle> allEdgeTriangles;
         public Dictionary<Triangle,int[]> edgeTriangleToSolutionMap;
+        public Dictionary<Triangle,Vector2Int[]> edgeTriangleToRowOfTrianglesMap;//edge/hint to the triangles involved in it.
         public PuzzleEdges(){
             //init map
             edgeTriangleToSolutionMap = new Dictionary<Triangle, int[]>();
+            edgeTriangleToRowOfTrianglesMap = new Dictionary<Triangle, Vector2Int[]>();
             //init lists.
             topEdgeTriangles = new List<Triangle>();
             topRightEdgeTriangles = new List<Triangle>();
@@ -30,6 +33,7 @@ namespace Blooper.Triangles{
             bottomLeftEdgeTriangles = new List<Triangle>();
             bottomEdgeTriangles = new List<Triangle>();
             bottomRightEdgeTriangles = new List<Triangle>();
+            allEdgeTriangles = new List<Triangle>();
         }
         public LevelEdge EdgeTriangleIsOn(Triangle et)
         {
@@ -85,20 +89,25 @@ namespace Blooper.Triangles{
             // for(int i = edgeTriangles.Count-1;i>0;i--){
             foreach(Triangle mt in edgeTriangles){
                 // Triangle mt = edgeTriangles[i];//-1-i
+                
                 Vector2Int m = mt.position;
+                List<Vector2Int> trisInRow = new List<Vector2Int>();
                 List<int> solution = new List<int>();
                 solution.Add(level[m]);
+                trisInRow.Add(m);
                 bool marching = true;
                 while(marching){
                     Vector2Int key = Triangle.March(m,mdir);
                     if(level.ContainsKey(key)){
                         m = key;//key is in while, m is out of this scope.
                         solution.Add(level[m]);
+                        trisInRow.Add(m);
                     }else{
                         marching = false;
                     }
                 }
                 // solutions[i] = solution.ToArray();
+                edgeTriangleToRowOfTrianglesMap.Add(mt,trisInRow.ToArray());//used for hint comparisons.
                 edgeTriangleToSolutionMap.Add(mt,solution.ToArray());
             }
             //

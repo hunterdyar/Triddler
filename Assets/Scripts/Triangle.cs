@@ -39,6 +39,7 @@ namespace Blooper.Triangles {
         public int selectedStatus;
         public float edgeLength;
         public GameObject drawingObject;
+        // public List<Triangle> edgeTriangles = new List<Triangle>();
         //z = -x - y (when y is even).
         //z = -x - y + 1 (when y is odd).
         public bool pointsUp { get { return position.x % 2 == 0; } } //f the x-coordinate is even, the triangle points up; if it's odd, the triangle points down.

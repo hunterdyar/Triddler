@@ -14,12 +14,71 @@ namespace Blooper.Triangles{
     public class HintDisplay : MonoBehaviour
     {
         public GameObject hintMeshMaker;
+        public TriangleGridSystem triangleGridSystem;
+        public Dictionary<Triangle,HintItem[]> edgeTriangleToHint;
+        void Awake()
+        {
+            triangleGridSystem = GameObject.FindObjectOfType<TriangleGridSystem>();
+        }
         public void DrawPuzzleHint(PuzzleEdges puzzleEdges){
+            edgeTriangleToHint = new Dictionary<Triangle, HintItem[]>();//for comparisons
+
             foreach(Triangle t in puzzleEdges.edgeTriangleToSolutionMap.Keys){
                 int[] solution = puzzleEdges.edgeTriangleToSolutionMap[t];
                 HintItem[] hint = TriddlePuzzle.GetHintFromSolution(solution);
+                edgeTriangleToHint.Add(t,hint);//
                 Draw(hint,PuzzleEdges.EdgeToSolutionDir(puzzleEdges.EdgeTriangleIsOn(t)),t);
             }
+        }
+
+        public void ComparePuzzleHint(PuzzleEdges puzzleEdges,Vector2Int updatedPos){
+
+            foreach(Triangle t in puzzleEdges.edgeTriangleToRowOfTrianglesMap.Keys){
+                //This should be a list of all of the triangles in the row, on any dimension.
+                Vector2Int[] row = puzzleEdges.edgeTriangleToRowOfTrianglesMap[t];
+                //first check our row, this is better performance than what follows. i... THINK.
+                bool updatedRow = false;
+
+                foreach(Vector2Int a in row)
+                {
+                    if (a == updatedPos){updatedRow = true;break;}
+                }
+                //DEB&UG OVERRIDE
+                // updatedRow = true;
+                //
+
+                //I need to sleep but here is what I know: This function isn't checking all the rows
+                //and you can select the same triangle its behavior will change.
+
+                if(updatedRow){
+                    Debug.Log("checking hints for a row of length: "+row.Length);
+                    int[] maybeSolution = triangleGridSystem.GetCurrentValuesFromList(row);
+                    HintItem[] maybeHint = TriddlePuzzle.GetHintFromSolution(maybeSolution);
+
+                    //We should write our own comparator. but thats not even the closest thing to being the ugliest part about the code in this project.
+                    bool hintIsCorrect = true;
+                    if(maybeHint.Length != edgeTriangleToHint[t].Length){
+                        //these aint the same.
+                        hintIsCorrect = false;
+                        break;
+                    }
+                    
+                    for(int i = 0;i<maybeHint.Length;i++)
+                    {
+                        if(maybeHint[i].q != edgeTriangleToHint[t][i].q || maybeHint[i].status != edgeTriangleToHint[t][i].status){
+                            hintIsCorrect = false;
+                            break;
+                        }
+                    }
+
+                    if(hintIsCorrect)
+                    {
+                        Debug.Log("a hint is correct!");
+                    }
+                }
+                //Is maybehint equal to the same hint that we, uh, care about?
+            }
+
         }
         
         public void Draw(HintItem[] hint, MarchDirections dir, Triangle initialEdge){
