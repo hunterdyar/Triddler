@@ -58,10 +58,10 @@ public class CameraController : MonoBehaviour
         }
         previousMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
-    public void ResetToCenter(bool forceReset = false){
+    public void ResetToCenter(bool forceReset = false,bool ignoreHints = false){
         if(allInBoundsOrthoSize == 0 || forceReset)
         {
-            Rect r = CalculateTargetsBoundingBox();
+            Rect r = CalculateTargetsBoundingBox(ignoreHints);
             allInBoundsOrthoSize = CalculateOrthographicSize(r);
         }
         Camera.main.orthographicSize = allInBoundsOrthoSize;
@@ -69,7 +69,7 @@ public class CameraController : MonoBehaviour
     }
 
     //FROM https://answers.unity.com/questions/1231701/fitting-bounds-into-orthographic-2d-camera.html
-    Rect CalculateTargetsBoundingBox()//
+    Rect CalculateTargetsBoundingBox(bool ignoreHints)//
      {
          float minX = Mathf.Infinity;
          float maxX = Mathf.NegativeInfinity;
@@ -85,13 +85,15 @@ public class CameraController : MonoBehaviour
              maxY = Mathf.Max(maxY, position.y);
          }
          //
-         foreach (Transform target in hintParent) {
-             Vector3 position = target.position;
+         if(!ignoreHints){
+            foreach (Transform target in hintParent) {
+                Vector3 position = target.position;
 
-             minX = Mathf.Min(minX, position.x);
-             minY = Mathf.Min(minY, position.y);
-             maxX = Mathf.Max(maxX, position.x);
-             maxY = Mathf.Max(maxY, position.y);
+                minX = Mathf.Min(minX, position.x);
+                minY = Mathf.Min(minY, position.y);
+                maxX = Mathf.Max(maxX, position.x);
+                maxY = Mathf.Max(maxY, position.y);
+            }
          }
          //
          Debug.Log("Found box"+ minX+" - "+minY+" - "+maxX+" - "+maxY);

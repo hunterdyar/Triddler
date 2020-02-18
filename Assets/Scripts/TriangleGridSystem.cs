@@ -90,8 +90,8 @@ namespace Blooper.Triangles{
         [ContextMenu("Load Level")]
         public void LoadLevel()
         {
-            //Clear current level...
-            //destroy children...
+
+            lineRenderer.gameObject.SetActive(true);
             puzzle.SetLevelFromLevelAsText();
             //copy puzzle data to here
             levelData = new Dictionary<Vector2Int, int>(puzzle.level);
@@ -109,7 +109,7 @@ namespace Blooper.Triangles{
             hintDisplay.DrawPuzzleHint(puzzleEdges);
             Camera.main.transform.position = (Vector3)GetVisualCenter()+Vector3.back*10;
             Camera.main.GetComponent<CameraController>().centeredPos = Camera.main.transform.position;
-            Camera.main.GetComponent<CameraController>().ResetToCenter(true);
+            Camera.main.GetComponent<CameraController>().ResetToCenter(true,false);
         }
         public void SetPuzzleSolution(TriddlePuzzle p){
             Dictionary<Vector2Int, int> level = new Dictionary<Vector2Int,int>();
@@ -187,8 +187,9 @@ namespace Blooper.Triangles{
         {
             Debug.Log("o.K.");
             hintDisplay.Reset();
-            Camera.main.GetComponent<CameraController>().ResetToCenter(true);
+            Camera.main.GetComponent<CameraController>().ResetToCenter(true,true);
             GameObject.FindObjectOfType<Selector>().enabled = false;
+            lineRenderer.gameObject.SetActive(false);
         }
         bool AddTriangle(Triangle o)
         {

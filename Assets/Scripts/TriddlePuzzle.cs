@@ -105,7 +105,7 @@ namespace Blooper.Triangles{
             //
             HintItem.palette = palette;
             //
-            for(int i = index;i<lar.Length;i = i+3)
+            for(int i = index;i<lar.Length-2;i = i+3)
             {
                 if(lar[i] != "" && lar[i+1] != "" && lar[i+2] != ""){
                     Vector2Int p = new Vector2Int(int.Parse(lar[i]),int.Parse(lar[i+1]));
