@@ -38,6 +38,7 @@ namespace Blooper.Triangles {
         public int status;
         public int selectedStatus;
         public float edgeLength;
+        public List<Vector2Int> edgesForThisTriangle = new List<Vector2Int>();
         public GameObject drawingObject;
         // public List<Triangle> edgeTriangles = new List<Triangle>();
         //z = -x - y (when y is even).

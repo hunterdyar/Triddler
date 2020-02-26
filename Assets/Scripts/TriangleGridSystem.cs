@@ -106,6 +106,7 @@ namespace Blooper.Triangles{
             DrawAllTriangles();
             DrawTriangleGrid();
             SetPuzzleSolution(puzzle);
+            SetEdgeTriangleInfoForTriangles();
             hintDisplay.DrawPuzzleHint(puzzleEdges);
             Camera.main.transform.position = (Vector3)GetVisualCenter()+Vector3.back*10;
             Camera.main.GetComponent<CameraController>().centeredPos = Camera.main.transform.position;
@@ -127,6 +128,28 @@ namespace Blooper.Triangles{
             //
             p.level = level;//not sure about this one.
             //
+        }
+        public void SetEdgeTriangleInfoForTriangles()
+        {
+            //assume traingles edgesForThisTriangle list is cleared.
+            //
+            //
+            foreach(KeyValuePair<Vector2Int,Vector2Int[]> ett in puzzleEdges.edgeTriangleToRowOfTrianglesMap)
+            {
+                Vector2Int tpos = ett.Key;
+                foreach(Vector2Int pos in ett.Value)
+                {
+                    trid[pos].edgesForThisTriangle.Add(tpos);
+                }
+            }
+        }
+        public Triangle GetTriangle(Vector2Int pos)
+        {
+            if(trid.ContainsKey(pos))
+            {
+                return trid[pos];
+            }
+            return null;//else
         }
         public Vector2 GetVisualCenter()
         {

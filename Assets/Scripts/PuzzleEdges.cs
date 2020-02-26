@@ -21,11 +21,11 @@ namespace Blooper.Triangles{
         public List<Triangle> bottomRightEdgeTriangles;
         public List<Triangle> allEdgeTriangles;
         public Dictionary<Triangle,int[]> edgeTriangleToSolutionMap;
-        public Dictionary<Triangle,Vector2Int[]> edgeTriangleToRowOfTrianglesMap;//edge/hint to the triangles involved in it.
+        public Dictionary<Vector2Int,Vector2Int[]> edgeTriangleToRowOfTrianglesMap;//edge/hint to the triangles involved in it.
         public PuzzleEdges(){
             //init map
             edgeTriangleToSolutionMap = new Dictionary<Triangle, int[]>();
-            edgeTriangleToRowOfTrianglesMap = new Dictionary<Triangle, Vector2Int[]>();
+            edgeTriangleToRowOfTrianglesMap = new Dictionary<Vector2Int, Vector2Int[]>();
             //init lists.
             topEdgeTriangles = new List<Triangle>();
             topRightEdgeTriangles = new List<Triangle>();
@@ -107,7 +107,7 @@ namespace Blooper.Triangles{
                     }
                 }
                 // solutions[i] = solution.ToArray();
-                edgeTriangleToRowOfTrianglesMap.Add(mt,trisInRow.ToArray());//used for hint comparisons.
+                edgeTriangleToRowOfTrianglesMap.Add(mt.position,trisInRow.ToArray());//used for hint comparisons.
                 edgeTriangleToSolutionMap.Add(mt,solution.ToArray());
             }
             //
